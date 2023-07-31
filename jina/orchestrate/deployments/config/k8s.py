@@ -38,7 +38,7 @@ class K8sDeploymentConfig:
                 shard_id: Optional[int],
                 common_args: Union['Namespace', Dict],
                 deployment_args: Union['Namespace', Dict],
-                k8s_namespace: str,
+                k8s_namespace: Optional[str],
         ):
             self.name = name
             self.dns_name = to_compatible_name(name)

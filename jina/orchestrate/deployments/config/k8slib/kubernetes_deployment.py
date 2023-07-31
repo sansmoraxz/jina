@@ -13,7 +13,7 @@ PERIOD_SECONDS = 5
 
 def get_template_yamls(
         name: str,
-        namespace: str,
+        namespace: Optional[str],
         image_name: str,
         container_cmd: str,
         container_args: str,

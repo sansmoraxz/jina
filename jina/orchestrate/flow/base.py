@@ -2769,7 +2769,7 @@ class Flow(
         if self._build_level.value < FlowBuildLevel.GRAPH.value:
             self.build(copy_flow=False)
 
-        k8s_namespace = k8s_namespace or self.args.name or 'default'
+        k8s_namespace = k8s_namespace or self.args.name
 
         for node, v in self._deployment_nodes.items():
 

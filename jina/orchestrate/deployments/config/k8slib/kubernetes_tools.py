@@ -41,6 +41,7 @@ def get_yaml(template: str, params: Dict) -> Dict:
 
 def _get_yaml(template: str, params: Dict) -> Dict:
     import yaml
+    # TODO: ise jinja2
 
     path = os.path.join(DEFAULT_RESOURCE_DIR, f'{template}.yml')
 
@@ -62,7 +63,8 @@ def _get_configmap_yaml(template: str, params: Dict):
         config_map = yaml.safe_load(f)
 
     config_map['metadata']['name'] = params.get('name') + '-' + 'configmap'
-    config_map['metadata']['namespace'] = params.get('namespace')
+    if params.get('namespace'):
+        config_map['metadata']['namespace'] = params.get('namespace')
     if params.get('data'):
         for key, value in params['data'].items():
             config_map['data'][key] = str(value)
