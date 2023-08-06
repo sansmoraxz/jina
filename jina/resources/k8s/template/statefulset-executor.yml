@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {name}
-  namespace: {namespace}
+  name: {{ name }}
+  namespace: {{ namespace }}
 spec:
-  replicas: {replicas}
+  replicas: {{ replicas }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -12,40 +12,40 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: {name}
+      app: {{ name }}
   template:
     metadata:
       labels:
-        app: {name}
-        jina_deployment_name: {jina_deployment_name}
-        shard_id: {shard_id}
-        pod_type: {pod_type}
-        ns: {namespace}
+        app: {{ name }}
+        jina_deployment_name: {{ jina_deployment_name }}
+        shard_id: {{ shard_id }}
+        pod_type: {{ pod_type }}
+        ns: {{ namespace }}
       annotations:
         linkerd.io/inject: enabled
     spec:
       containers:
         - name: executor
-          image: {image}
-          imagePullPolicy: {pull_policy}
-          command: {command}
-          args: {args}
+          image: {{ image }}
+          imagePullPolicy: {{ pull_policy }}
+          command: {{ command }}
+          args: {{ args }}
           ports:
-            - containerPort: {port}
+            - containerPort: {{ port }}
           envFrom:
             - configMapRef:
-                name: {name}-configmap
+                name: {{ name }}-configmap
           env:
             - name: POD_UID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.uid
             - name: JINA_DEPLOYMENT_NAME
-              value: {jina_deployment_name}
+              value: {{ jina_deployment_name }}
             - name: K8S_STATEFULSET_NAME
-              value: {name}
+              value: {{ name }}
             - name: K8S_NAMESPACE_NAME
-              value: {namespace}
+              value: {{ namespace }}
             - name: K8S_POD_NAME
               valueFrom:
                 fieldRef:
@@ -56,10 +56,10 @@ spec:
                 - jina
                 - ping
                 - executor
-                - {protocol}://127.0.0.1:{port}
+                - {{ protocol }}://127.0.0.1:{{ port }}
             initialDelaySeconds: 5
-            periodSeconds: {period_seconds}
-            failureThreshold: {failure_threshold}
+            periodSeconds: {{ period_seconds }}
+            failureThreshold: {{ failure_threshold }}
             timeoutSeconds: 10
           livenessProbe:
             exec:
@@ -67,7 +67,7 @@ spec:
                 - jina
                 - ping
                 - executor
-                - {protocol}://127.0.0.1:{port}
+                - {{ protocol }}://127.0.0.1:{{ port }}
             initialDelaySeconds: 30
             periodSeconds: 5
             timeoutSeconds: 10
@@ -76,14 +76,14 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "sleep 2"]
           volumeMounts:
-            - name: {name}-volume
-              mountPath: "{volume_path}"
+            - name: {{ name }}-volume
+              mountPath: "{{ volume_path }}"
   volumeClaimTemplates:
     - metadata:
-        name: {name}-volume
+        name: {{ name }}-volume
       spec:
-        accessModes: {accessModes} # best default accessModes
-        storageClassName: {storageClassName} # best storage class
+        accessModes: {{ accessModes }} # best default accessModes
+        storageClassName: {{ storageClassName }} # best storage class
         resources:
           requests:
-            storage: {storageCapacity} # best storage class
+            storage: {{ storageCapacity }} # best storage class

@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {name}
-  namespace: {namespace}
+  name: {{ name }}
+  namespace: {{ namespace }}
   labels:
-    app: {name}
+    app: {{ name }}
 spec:
-  type: {type}
+  type: {{ type }}
   ports:
-    - port: {port}
-      targetPort: {port}
+    - port: {{ port }}
+      targetPort: {{ port }}
       name: port
       protocol: TCP
-    - port: {port_monitoring}
-      targetPort: {port_monitoring}
+    - port: {{ port_monitoring }}
+      targetPort: {{ port_monitoring }}
       name: monitoring
       protocol: TCP
   selector:
-    app: {target}
+    app: {{ target }}
