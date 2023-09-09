@@ -40,6 +40,7 @@ def get_yaml(template: str, params: Dict) -> Dict:
 
 
 def _get_yaml(template: str, params: Dict) -> Dict:
+    import jinja2
     import yaml
     # TODO: ise jinja2
 
@@ -47,8 +48,8 @@ def _get_yaml(template: str, params: Dict) -> Dict:
 
     with open(path, encoding='utf-8') as f:
         content = f.read()
-        for k, v in params.items():
-            content = content.replace(f'{{{k}}}', str(v))
+        template = jinja2.Template(content)
+        content = template.render(**params)
         d = yaml.safe_load(content)
 
     return d

@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {name}
-  namespace: {namespace}
+  name: {{ name }}
+  namespace: {{ namespace }}
 spec:
-  replicas: {replicas}
+  replicas: {{ replicas }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -12,40 +12,40 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: {name}
+      app: {{ name }}
   template:
     metadata:
       labels:
-        app: {name}
-        jina_deployment_name: {jina_deployment_name}
-        shard_id: {shard_id}
-        pod_type: {pod_type}
-        ns: {namespace}
+        app: {{ name }}
+        jina_deployment_name: {{ jina_deployment_name }}
+        shard_id: {{ shard_id }}
+        pod_type: {{ pod_type }}
+        ns: {{ namespace }}
       annotations:
         linkerd.io/inject: enabled
     spec:
       containers:
       - name: executor
-        image: {image}
-        imagePullPolicy: {pull_policy}
-        command: {command}
-        args: {args}
+        image: {{ image }}
+        imagePullPolicy: {{ pull_policy }}
+        command: {{ command }}
+        args: {{ args }}
         ports:
-          - containerPort: {port}
+          - containerPort: {{ port }}
         envFrom:
           - configMapRef:
-              name: {name}-configmap
+              name: {{ name }}-configmap
         env:
         - name: POD_UID
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
         - name: JINA_DEPLOYMENT_NAME
-          value: {jina_deployment_name}
+          value: {{ jina_deployment_name }}
         - name: K8S_DEPLOYMENT_NAME
-          value: {name}
+          value: {{ name }}
         - name: K8S_NAMESPACE_NAME
-          value: {namespace}
+          value: {{ namespace }}
         - name: K8S_POD_NAME
           valueFrom:
             fieldRef:
@@ -56,10 +56,10 @@ spec:
               - jina
               - ping
               - executor
-              - 127.0.0.1:{port}
+              - 127.0.0.1:{{ port }}
           initialDelaySeconds: 5
-          periodSeconds: {period_seconds}
-          failureThreshold: {failure_threshold}
+          periodSeconds: {{ period_seconds }}
+          failureThreshold: {{ failure_threshold }}
           timeoutSeconds: 10
         livenessProbe:
           exec:
@@ -67,7 +67,7 @@ spec:
               - jina
               - ping
               - executor
-              - 127.0.0.1:{port}
+              - 127.0.0.1:{{ port }}
                 - --timeout 9500
           initialDelaySeconds: 30
           periodSeconds: 5
@@ -77,26 +77,26 @@ spec:
             exec:
               command: ["/bin/sh", "-c", "sleep 2"]
       - name: uses-before
-        image: {image_uses_before}
-        imagePullPolicy: {pull_policy}
-        command: {command_uses_before}
-        args: {args_uses_before}
+        image: {{ image_uses_before }}
+        imagePullPolicy: {{ pull_policy }}
+        command: {{ command_uses_before }}
+        args: {{ args_uses_before }}
         ports:
-          - containerPort: {port_uses_before}
+          - containerPort: {{ port_uses_before }}
         envFrom:
           - configMapRef:
-              name: {name}-configmap
+              name: {{ name }}-configmap
         env:
         - name: POD_UID
           valueFrom:
             fieldRef:
               fieldPath: metadata.uid
         - name: JINA_DEPLOYMENT_NAME
-          value: {jina_deployment_name}
+          value: {{ jina_deployment_name }}
         - name: K8S_DEPLOYMENT_NAME
-          value: {name}
+          value: {{ name }}
         - name: K8S_NAMESPACE_NAME
-          value: {namespace}
+          value: {{ namespace }}
         - name: K8S_POD_NAME
           valueFrom:
             fieldRef:
@@ -107,10 +107,10 @@ spec:
               - jina
               - ping
               - executor
-              - 127.0.0.1:{port_uses_before}
+              - 127.0.0.1:{{ port_uses_before }}
           initialDelaySeconds: 5
-          periodSeconds: {period_seconds}
-          failureThreshold: {failure_threshold}
+          periodSeconds: {{ period_seconds }}
+          failureThreshold: {{ failure_threshold }}
           timeoutSeconds: 10
         livenessProbe:
           exec:
@@ -118,7 +118,7 @@ spec:
               - jina
               - ping
               - executor
-              - 127.0.0.1:{port_uses_before}
+              - 127.0.0.1:{{ port_uses_before }}
           initialDelaySeconds: 30
           periodSeconds: 5
           timeoutSeconds: 10
